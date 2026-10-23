@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { auth } from './firebase';
-import { User } from 'firebase/auth';
-import Login from './Components/Login';
-import UserCard from './Components/UserCard';
+import React, { useState } from 'react';
+import WelcomeCard from './Components/WelcomeCard';
 import ViewOffOverlay from './Components/ViewOffOverlay';
 import SmallScreenOverlay from './Components/SmallScreenOverlay';
 import ClockComponent from './Components/ClockComponent';
@@ -10,43 +7,7 @@ import TimerComponent from './Components/TimerComponent';
 import ChatBotComponent from './Components/ChatBotComponent';
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
   const [view, setView] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((u) => {
-      setUser(u);
-      try {
-        if (u) {
-          localStorage.setItem(
-            'user',
-            JSON.stringify({
-              uid: u.uid,
-              displayName: u.displayName,
-              email: u.email,
-              photoURL: u.photoURL,
-            })
-          );
-        } else {
-          localStorage.removeItem('user');
-        }
-      } catch {
-        // ignore storage failures
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-
-  
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <Login />
-      </div>
-    );
-  }
 
   return (
     <div className='height-screen overflow-hidden relative'>
@@ -89,7 +50,7 @@ const App: React.FC = () => {
         <div className="w-full max-w-6xl">
           <div className="grid grid-cols-4 grid-rows-3 gap-3 auto-rows-fr">
             <div className="col-start-1 col-end-2 row-start-1 row-end-2 rounded-2xl glass border border-[rgba(255,255,255,0.05)] p-5 flex flex-col justify-between">
-              <UserCard user={user} onSignOut={() => auth.signOut()} />
+              <WelcomeCard />
             </div>
             <div className="col-start-2 col-end-4 row-start-1 row-end-3 rounded-2xl glass border border-[rgba(255,255,255,0.05)] p-8 flex flex-col justify-between" >
               Calendar / Events
